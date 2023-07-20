@@ -50,8 +50,8 @@ public class SecurityConfig {
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션저장기능
                                                                                                                 // // 제거
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/api/users/login", "/api/users/signup", "/api/users/duplicated/**",
-                                "/api/users/swagger", "/api/users/swagger-ui/**", "/api/users/swagger-resources/**", "/v3/api-docs/**")
+                        .requestMatchers("/auth/permit-all/**", 
+                                "/auth/swagger", "/auth/swagger-ui/**", "/auth/swagger-resources/**", "/v3/api-docs/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtTokenFilter(secretKey),
