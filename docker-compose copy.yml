@@ -1,0 +1,11 @@
+version: '3'
+services:
+  web:
+    build: ./
+    environment:
+      - JWT_SECRET=
+      - USER_SERVICE_URL=
+
+    ports:
+      - "8087:8080"
+
