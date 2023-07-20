@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import kea.alog.auth.service.UserService;
 import kea.alog.auth.web.dto.UserDto.LoginRequestDto;
 @RestController
-@RequestMapping("/api/aggr")
+@RequestMapping("/auth")
 public class UserController {
     
     @Autowired
@@ -26,6 +26,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.login(loginRequestDto));
     
     
+    }
+
+    @PostMapping("/jwt/validate")
+    public ResponseEntity<Boolean> validate() {
+        return ResponseEntity.ok(true);
     }
 
 }
