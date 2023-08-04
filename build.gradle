@@ -36,7 +36,9 @@ dependencies {
 	
 	//openfeign
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.2'
-	
+
+	//jackson
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.0'	
 
 	//swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'

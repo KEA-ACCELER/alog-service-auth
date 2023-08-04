@@ -5,6 +5,8 @@ services:
     environment:
       - JWT_SECRET=
       - USER_SERVICE_URL=
+      - GITHUB_CLIENT_ID=
+      - GITHUB_CLIENT_SECRET=
 
     ports:
       - "8087:8080"
