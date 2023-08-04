@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -35,6 +36,16 @@ public class UserService {
         String token = JwtUtil.createJwt(isSuccessed.get().getUserPk(), isSuccessed.get().getUserNN(), loginRequestDto.getUserEmail(), secretKey, expireMS);
         System.out.println("token  " + token);
         return token;
+    }
+
+    @Transactional 
+    public String isRegistered (String userEmail) {
+        Optional<LoginResponseDto> isRegistered = userFeign.isConfirmEmail(userEmail);
+        if (isRegistered.isEmpty()) {
+            return userEmail;
+        }
+        LoginResponseDto loginResponseDto = isRegistered.get();
+        return JwtUtil.createJwt(loginResponseDto.getUserPk(), loginResponseDto.getUserNN(), userEmail, secretKey, expireMS);
     }
 
 

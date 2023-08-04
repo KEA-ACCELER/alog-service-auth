@@ -51,7 +51,7 @@ public class SecurityConfig {
                                                                                                                 // // 제거
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/auth/permit-all/**", 
-                                "/auth/swagger", "/auth/swagger-ui/**", "/auth/swagger-resources/**", "/v3/api-docs/**")
+                                "/auth/swagger/**", "/auth/swagger-ui/**", "/auth/swagger-resources/**", "/v3/api-docs/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtTokenFilter(secretKey),

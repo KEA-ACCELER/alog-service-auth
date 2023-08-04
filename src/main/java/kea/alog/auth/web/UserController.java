@@ -24,10 +24,8 @@ public class UserController {
     @PostMapping("/permit-all/login")
     public ResponseEntity<String> signup(@RequestBody LoginRequestDto loginRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.login(loginRequestDto));
-    
-    
     }
-
+    
     @PostMapping("/jwt/validate")
     public ResponseEntity<Boolean> validate() {
         return ResponseEntity.ok(true);
