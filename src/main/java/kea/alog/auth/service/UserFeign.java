@@ -23,10 +23,10 @@ public interface UserFeign {
     // @GetMapping(path="/info")
     // public Optional<Object> GetUserInfo(@RequestHeader("authorization") String jwt);
 
-    @PostMapping(path="/login")
+    @PostMapping(path="/api/users/login")
     public Optional<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto);
 
-    @GetMapping(path="/signup/confirm")
+    @GetMapping(path="/api/users/signup/confirm")
     public Optional<LoginResponseDto> isConfirmEmail(@RequestParam("email") String userEmail);
 }
 
