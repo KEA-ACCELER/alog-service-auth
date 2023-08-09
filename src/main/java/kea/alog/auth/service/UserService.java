@@ -42,10 +42,10 @@ public class UserService {
     public String isRegistered (String userEmail) {
         Optional<LoginResponseDto> isRegistered = userFeign.isConfirmEmail(userEmail);
         if (isRegistered.isEmpty()) {
-            return userEmail;
+            return "email " + userEmail;
         }
         LoginResponseDto loginResponseDto = isRegistered.get();
-        return JwtUtil.createJwt(loginResponseDto.getUserPk(), loginResponseDto.getUserNN(), userEmail, secretKey, expireMS);
+        return "jwt "+ JwtUtil.createJwt(loginResponseDto.getUserPk(), loginResponseDto.getUserNN(), userEmail, secretKey, expireMS);
     }
 
 
