@@ -41,6 +41,10 @@ public class UserController {
         return ResponseEntity.ok(true);
     }
 
+    @GetMapping("/jwt/validate")
+    public ResponseEntity<Boolean> validate2() {
+        return ResponseEntity.ok(true);
+    }
 
 
 }
