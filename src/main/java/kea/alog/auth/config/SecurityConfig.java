@@ -45,11 +45,9 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .anonymous().authorities("ROLE_ANONYMOUS").and()// token 기반 인증이기 때문에 기본적인 http 인증은 disable
                 .cors().configurationSource(corsConfigurationSource()).and() // cors 커스텀하기
-                // .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt) //jjwt 라이브러리가
-                // Java에서 JWT를 생성하고 검증하는 데 사용되는 반면 OAuth 2.0은 토큰 전송 방식을 지정하는 프로토콜
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션저장기능
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/auth/permit-all/**",
+                .authorizeHttpRequests((requests) -> 
+                requests.requestMatchers("/auth/permit-all/**", 
                                 "/auth/swagger/**", "/auth/swagger-ui/**", "/auth/swagger-resources/**", "/v3/api-docs/**")
                         
                         .permitAll()
