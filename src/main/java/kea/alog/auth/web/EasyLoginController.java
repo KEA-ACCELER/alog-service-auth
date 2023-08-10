@@ -44,7 +44,7 @@ public class EasyLoginController {
 
     // 서버에서 액세스 토큰 요청하기
     @Operation(summary = "깃허브 로그인", description = "인가토큰을 받아서 깃허브 리소스 서버에 액세스 토큰을 요청 & 깃허브 리소스 서버에서 사용자 정보를 받아옵니다.")
-    @GetMapping("")
+    @GetMapping("/auth-token")
     public ResponseEntity<String> loginWithGithubCallback(@RequestParam String code)  {
         // RestTemplate 객체를 사용하여 깃허브 리소스 서버에 POST 요청을 보냅니다.
         RestTemplate restTemplate = new RestTemplate();
@@ -93,25 +93,26 @@ public class EasyLoginController {
         //
     }
 
-    // 액세스 토큰으로 유저 정보 요청하기
-    // @GetMapping("/user")
-    // public ResponseEntity<String> getUserInfo(@RequestParam String accessToken) {
-    //     RestTemplate restTemplate = new RestTemplate();
-    //     HttpHeaders headers = new HttpHeaders();
-    //     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    //     headers.setBearerAuth(accessToken);
-    //     HttpEntity<?> request = new HttpEntity<>(headers);
-    //     ResponseEntity<String> userInfoResponse = restTemplate.exchange("https://api.github.com/user",
-    //             HttpMethod.GET, request, String.class);
-    //     String userInfo = userInfoResponse.getBody();
-    //     ObjectMapper mapper = new ObjectMapper();
-    //     try {
-    //         ObjectNode email = mapper.readValue(userInfo, ObjectNode.class);
-    //         return ResponseEntity.ok(email.get("email").asText());
-    //     }catch (Exception e){
-    //         log.error("error : {}", e.getMessage());
-    //     }
-    //     return ResponseEntity.ok("Invalid user Info");
-    // }
+    //액세스 토큰으로 유저 정보 요청하기
+    @Operation(summary = "액세스 토큰으로 유저 정보 요청하기", description = "액세스 토큰을 받아서 깃허브 리소스 서버에 유저 정보를 요청합니다.")
+    @GetMapping("/access-token")
+    public ResponseEntity<String> getUserInfo(@RequestParam String accessToken) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setBearerAuth(accessToken);
+        HttpEntity<?> request = new HttpEntity<>(headers);
+        ResponseEntity<String> userInfoResponse = restTemplate.exchange("https://api.github.com/user",
+                HttpMethod.GET, request, String.class);
+        String userInfo = userInfoResponse.getBody();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            ObjectNode email = mapper.readValue(userInfo, ObjectNode.class);
+            return ResponseEntity.ok(email.get("email").asText());
+        }catch (Exception e){
+            log.error("error : {}", e.getMessage());
+        }
+        return ResponseEntity.ok("Invalid user Info");
+    }
 
 }

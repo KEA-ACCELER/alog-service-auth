@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 // @EnableWebSecurity(debug = true) // 기본적인 웹 보안 활성화
 // 추가적인 설정을 위해 WebSecurityConfigurer를 implements하거나
 // WebSecurityConfigurerAdapter를 extends하는 방법이 있다.
@@ -45,13 +45,11 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .anonymous().authorities("ROLE_ANONYMOUS").and()// token 기반 인증이기 때문에 기본적인 http 인증은 disable
                 .cors().configurationSource(corsConfigurationSource()).and() // cors 커스텀하기
-                // .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt) //jjwt 라이브러리가
-                // Java에서 JWT를 생성하고 검증하는 데 사용되는 반면 OAuth 2.0은 토큰 전송 방식을 지정하는 프로토콜
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션저장기능
-                                                                                                                // // 제거
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/auth/permit-all/**", 
+                .authorizeHttpRequests((requests) -> 
+                requests.requestMatchers("/auth/permit-all/**", 
                                 "/auth/swagger/**", "/auth/swagger-ui/**", "/auth/swagger-resources/**", "/v3/api-docs/**")
+                        
                         .permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtTokenFilter(secretKey),
@@ -64,7 +62,6 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration();
-        // configuration.setAllowedOrigins(Arrays.asList("/swagger*/**"));
         configuration.setAllowedOriginPatterns(Arrays.asList("*")); // 브라우저가 해당 origin이 자원에 접근 할 수 있도록 허용한다. *는
                                                                     // credential이 없는 경우에 한해 모든 origin에서 접근이 가능하게 함.
         configuration.setAllowedMethods(Arrays.asList("*")); // preflight 요청에 대한 응답으로 허용되는 메서드들
