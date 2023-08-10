@@ -2,25 +2,21 @@ package kea.alog.auth.config;
 
 import java.util.Arrays;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.*;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 // @EnableWebSecurity(debug = true) // 기본적인 웹 보안 활성화
 // 추가적인 설정을 위해 WebSecurityConfigurer를 implements하거나
 // WebSecurityConfigurerAdapter를 extends하는 방법이 있다.
@@ -48,9 +44,9 @@ public class SecurityConfig {
                 // .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt) //jjwt 라이브러리가
                 // Java에서 JWT를 생성하고 검증하는 데 사용되는 반면 OAuth 2.0은 토큰 전송 방식을 지정하는 프로토콜
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션저장기능
-                                                                                                                // // 제거
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/auth/permit-all/**", 
+                        .requestMatchers("OPTIONS".equals(requests.getHeader("x-original-method"))) // x-original-method 헤더가 OPTIONS인 요청을 선택합니다.
+                            ,"/auth/permit-all/**", 
                                 "/auth/swagger/**", "/auth/swagger-ui/**", "/auth/swagger-resources/**", "/v3/api-docs/**")
                         .permitAll()
                         .anyRequest().authenticated())
@@ -64,7 +60,6 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration();
-        // configuration.setAllowedOrigins(Arrays.asList("/swagger*/**"));
         configuration.setAllowedOriginPatterns(Arrays.asList("*")); // 브라우저가 해당 origin이 자원에 접근 할 수 있도록 허용한다. *는
                                                                     // credential이 없는 경우에 한해 모든 origin에서 접근이 가능하게 함.
         configuration.setAllowedMethods(Arrays.asList("*")); // preflight 요청에 대한 응답으로 허용되는 메서드들
