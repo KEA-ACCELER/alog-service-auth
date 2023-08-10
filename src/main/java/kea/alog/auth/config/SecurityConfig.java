@@ -2,19 +2,23 @@ package kea.alog.auth.config;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @EnableWebSecurity
 // @EnableWebSecurity(debug = true) // 기본적인 웹 보안 활성화
@@ -45,9 +49,9 @@ public class SecurityConfig {
                 // Java에서 JWT를 생성하고 검증하는 데 사용되는 반면 OAuth 2.0은 토큰 전송 방식을 지정하는 프로토콜
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션저장기능
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("OPTIONS".equals(requests.getHeader("x-original-method"))) // x-original-method 헤더가 OPTIONS인 요청을 선택합니다.
-                            ,"/auth/permit-all/**", 
+                        .requestMatchers("/auth/permit-all/**",
                                 "/auth/swagger/**", "/auth/swagger-ui/**", "/auth/swagger-resources/**", "/v3/api-docs/**")
+                        
                         .permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtTokenFilter(secretKey),
